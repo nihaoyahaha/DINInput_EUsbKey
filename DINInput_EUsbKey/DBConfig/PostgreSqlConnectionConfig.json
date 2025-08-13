@@ -1,0 +1,8 @@
+﻿{
+	"Server": "172.29.2.241",
+	"Port": "5433",
+	"UserId": "postgres",
+	"Password": "postgre123456",
+	"Database": "postgres"
+}
+

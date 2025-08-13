@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MessageInfo xmlns="./NCMessageSchema.xsd">
+  <!--
+	==================================
+	メッセージ構成説明
+	id:メッセージID
+	
+	msg:メッセージ
+	
+	==================================
+	-->
+
+  <Message id="CM00001" msg="eUSBキーを初期化します、よろしいですか?" />
+  <Message id="CM00002" msg="eUSBキーは既に初期化されました、再び初期化しますか?" />
+  <Message id="CM00003" msg="eUSBキーを初期化失敗しました。" />
+  <Message id="CM00004" msg="eUSBキーを初期化しました。" />
+  <Message id="CM00005" msg="eUSBキーは初期化されていません。初期化しますか?" />
+  <Message id="CM00006" msg="挿し込んでいるeUSBキーと一致しません。続けますか?" />
+  <Message id="CM00007" msg="加工帳入力利用終了日は必ず利用開始日以降です。" />
+  <Message id="CM00008" msg="加工帳絵符利用終了日は必ず利用開始日以降です。" />
+  <Message id="CM00009" msg="eUSBキーを追加しました。" />
+  <Message id="CM00010" msg="eUSBキーを更新します、よろしいですか?" />
+  <Message id="CM00011" msg="eUSBキーを更新しました。" />
+  <Message id="CM00012" msg="eUSBキーを読み込み失敗しました。" />
+
+
+  <Message id="CM99999" msg="eUSBキーが見つかりません。eUSBキーを挿入してください。" />
+</MessageInfo>
