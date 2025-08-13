@@ -137,24 +137,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utility\CalculateExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Utility\DataTableExtensions.cs" />
     <Compile Include="Utility\Encryption.cs" />
     <Compile Include="Utility\ErrorMessage.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utility\JapaneseDate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utility\ListItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Utility\MessageManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utility\NCIniFile.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\NCLogger.cs">
@@ -163,13 +151,7 @@
     <Compile Include="Utility\NCPublicFunction.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utility\NCRegistry.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Utility\NCSecurity.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utility\NetWorkAccess.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
