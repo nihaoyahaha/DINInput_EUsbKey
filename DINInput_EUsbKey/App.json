@@ -1,0 +1,32 @@
+﻿{
+	"RemoteServer": "ClientCA2",
+	"RemotePort": 8093,
+	"RemotePortSSL": 443,
+	"TimeOut": 300,
+	"ConnectionMode": "service",
+	"PostgresOptions": {
+		"Server": "127.0.0.1",
+		"Port": "5433",
+		"UserId": "postgres",
+		"Password": "postgre123456",
+		"Database": "postgres"
+	},
+	"ParaConfig": {
+		"Level": [
+			"",
+			"2=CAD30",
+			"4=CAD50",
+			"6=CAD100"
+		],
+		"CAD": [
+			"",
+			"0=EXLicense",
+			"1=AutoCAD",
+			"2=IJCAD",
+			"3=BricsCAD",
+			"4=ZWCAD"
+		]
+	}
+
+}
+

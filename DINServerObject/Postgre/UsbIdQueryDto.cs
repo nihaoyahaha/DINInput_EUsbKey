@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DINServerObject
 {
-	public class UsbIdQueryDto
+	public class UsbIdQueryDto:CMObjectDC
 	{
 		//キーＩＤ
 		public string KeyId { get; set; }

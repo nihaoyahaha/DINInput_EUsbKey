@@ -1,17 +1,7 @@
 ﻿using DI.NCFrameWork;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Configuration;
-using System.IO;
 using DINServerObject;
-using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace DINInput_EUsbKey
 {
@@ -19,9 +9,7 @@ namespace DINInput_EUsbKey
 	{
 		protected readonly string MSG_CAPTION = "eUSBキー管理システム";
 		private ErrorMessage _errMsg = null;
-		private static Configuration _config = null;
 		private static NCPublicFunction _pFunc = new NCPublicFunction();
-		private static WinServiceAPI _serviceApi = null;
 		private static NCLogger _log = NCLogger.GetInstance();
 
 		/// <summary>
@@ -34,20 +22,11 @@ namespace DINInput_EUsbKey
 		}
 
 		/// <summary>
-		/// アプリ構成ファイル
-		/// </summary>
-		public static Configuration Config
-		{
-			get { return _config; }
-		}
-
-		/// <summary>
 		/// サービスAPIを取得または設定する。
 		/// </summary>
-		public static WinServiceAPI ServiceApi
+		public static IWinServiceAPI ServiceApi
 		{
-			get { return _serviceApi; }
-			set { _serviceApi = value; }
+			get { return Program.serviceApi; }
 		}
 
 		/// <summary>
@@ -69,13 +48,6 @@ namespace DINInput_EUsbKey
 		public BaseForm()
 		{
 			InitializeComponent();
-			if (_config == null)
-			{
-				Directory.SetCurrentDirectory(Directory.GetParent(Application.StartupPath).FullName);
-				_config = _pFunc.GetCurrentConfigFile();
-			}
-			_serviceApi = new WinServiceAPI();
-			WinServiceAPI.SetConnectionString(Program.strDataConnectionString);
 		}
 	}
 }

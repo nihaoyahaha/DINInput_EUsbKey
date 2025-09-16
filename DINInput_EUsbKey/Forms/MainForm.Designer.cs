@@ -139,7 +139,7 @@
 			this.date_KeyUpdateDateTo.Name = "date_KeyUpdateDateTo";
 			this.date_KeyUpdateDateTo.ShowCheckBox = true;
 			this.date_KeyUpdateDateTo.Size = new System.Drawing.Size(136, 21);
-			this.date_KeyUpdateDateTo.TabIndex = 7;
+			this.date_KeyUpdateDateTo.TabIndex = 9;
 			// 
 			// btn_search
 			// 
@@ -147,7 +147,7 @@
 			this.btn_search.Location = new System.Drawing.Point(1091, 20);
 			this.btn_search.Name = "btn_search";
 			this.btn_search.Size = new System.Drawing.Size(75, 23);
-			this.btn_search.TabIndex = 8;
+			this.btn_search.TabIndex = 19;
 			this.btn_search.Text = "検索";
 			this.btn_search.UseVisualStyleBackColor = true;
 			this.btn_search.Click += new System.EventHandler(this.btn_search_Click);
@@ -178,7 +178,7 @@
 			this.date_UseEndDayFrom.Name = "date_UseEndDayFrom";
 			this.date_UseEndDayFrom.ShowCheckBox = true;
 			this.date_UseEndDayFrom.Size = new System.Drawing.Size(136, 21);
-			this.date_UseEndDayFrom.TabIndex = 7;
+			this.date_UseEndDayFrom.TabIndex = 11;
 			// 
 			// date_UseEndDayTo
 			// 
@@ -187,7 +187,7 @@
 			this.date_UseEndDayTo.Name = "date_UseEndDayTo";
 			this.date_UseEndDayTo.ShowCheckBox = true;
 			this.date_UseEndDayTo.Size = new System.Drawing.Size(136, 21);
-			this.date_UseEndDayTo.TabIndex = 7;
+			this.date_UseEndDayTo.TabIndex = 13;
 			// 
 			// label8
 			// 
@@ -215,7 +215,7 @@
 			this.date_UseEFUEndDayFrom.Name = "date_UseEFUEndDayFrom";
 			this.date_UseEFUEndDayFrom.ShowCheckBox = true;
 			this.date_UseEFUEndDayFrom.Size = new System.Drawing.Size(136, 21);
-			this.date_UseEFUEndDayFrom.TabIndex = 7;
+			this.date_UseEFUEndDayFrom.TabIndex = 15;
 			// 
 			// date_UseEFUEndDayTo
 			// 
@@ -224,7 +224,7 @@
 			this.date_UseEFUEndDayTo.Name = "date_UseEFUEndDayTo";
 			this.date_UseEFUEndDayTo.ShowCheckBox = true;
 			this.date_UseEFUEndDayTo.Size = new System.Drawing.Size(136, 21);
-			this.date_UseEFUEndDayTo.TabIndex = 7;
+			this.date_UseEFUEndDayTo.TabIndex = 17;
 			// 
 			// groupBox1
 			// 
@@ -242,7 +242,7 @@
 			this.btn_KeyRecognition.Location = new System.Drawing.Point(857, 105);
 			this.btn_KeyRecognition.Name = "btn_KeyRecognition";
 			this.btn_KeyRecognition.Size = new System.Drawing.Size(75, 23);
-			this.btn_KeyRecognition.TabIndex = 10;
+			this.btn_KeyRecognition.TabIndex = 20;
 			this.btn_KeyRecognition.Text = "Key認識";
 			this.btn_KeyRecognition.UseVisualStyleBackColor = true;
 			this.btn_KeyRecognition.Click += new System.EventHandler(this.btn_KeyRecognition_Click);
@@ -253,7 +253,7 @@
 			this.btn_KeyInitialization.Location = new System.Drawing.Point(938, 105);
 			this.btn_KeyInitialization.Name = "btn_KeyInitialization";
 			this.btn_KeyInitialization.Size = new System.Drawing.Size(75, 23);
-			this.btn_KeyInitialization.TabIndex = 10;
+			this.btn_KeyInitialization.TabIndex = 22;
 			this.btn_KeyInitialization.Text = "Key初期化";
 			this.btn_KeyInitialization.UseVisualStyleBackColor = true;
 			this.btn_KeyInitialization.Click += new System.EventHandler(this.btn_KeyInitialization_Click);
@@ -264,7 +264,7 @@
 			this.btn_KeyCreate.Location = new System.Drawing.Point(1019, 105);
 			this.btn_KeyCreate.Name = "btn_KeyCreate";
 			this.btn_KeyCreate.Size = new System.Drawing.Size(75, 23);
-			this.btn_KeyCreate.TabIndex = 10;
+			this.btn_KeyCreate.TabIndex = 24;
 			this.btn_KeyCreate.Text = "Key作成";
 			this.btn_KeyCreate.UseVisualStyleBackColor = true;
 			this.btn_KeyCreate.Click += new System.EventHandler(this.btn_KeyCreate_Click);
@@ -275,7 +275,7 @@
 			this.btn_KeyUpdate.Location = new System.Drawing.Point(1100, 105);
 			this.btn_KeyUpdate.Name = "btn_KeyUpdate";
 			this.btn_KeyUpdate.Size = new System.Drawing.Size(75, 23);
-			this.btn_KeyUpdate.TabIndex = 10;
+			this.btn_KeyUpdate.TabIndex = 26;
 			this.btn_KeyUpdate.Text = "Key更新";
 			this.btn_KeyUpdate.UseVisualStyleBackColor = true;
 			this.btn_KeyUpdate.Click += new System.EventHandler(this.btn_KeyUpdate_Click);
@@ -325,8 +325,9 @@
 			this.Controls.Add(this.label8);
 			this.Controls.Add(this.label6);
 			this.Controls.Add(this.label1);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Name = "MainForm";
+			this.ShowIcon = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "eUSBキー管理システム";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.Load += new System.EventHandler(this.MainForm_Load);

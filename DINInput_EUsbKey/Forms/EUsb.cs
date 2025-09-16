@@ -1,12 +1,14 @@
 ﻿using DI.NCFrameWork;
 using DINServerObject;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -34,9 +36,15 @@ namespace DINInput_EUsbKey
 		/// </summary>
 		public bool IsReadOnly { get; set; } = false;
 
+		/// <summary>
+		/// フォーム名
+		/// </summary>
+		public string FormText { get; set; }
+
 		public event Action CallParetnRefreshData;
 
-		private string[] _cmbDinCad_DataSource = new string[] { "2-DINCAD30", "4-DINCAD50", "6-DINCAD100" };
+		public ParaConfig Config { get; set; }
+
 		public EUsb()
 		{
 			InitializeComponent();
@@ -44,15 +52,27 @@ namespace DINInput_EUsbKey
 
 		private void EUsb_Load(object sender, EventArgs e)
 		{
-			InitCmbDinCADItems();
-			if (IsReadOnly)
+			try
 			{
-				ReadDataFromUsbKey();
-				SetFormReadOnly();
-			} 
-			else
+				// フォーム名
+				this.Text = FormText;
+
+				InitCmbDinLevelItems();
+				InitCmbDinCADItems();
+
+				if (IsReadOnly)
+				{
+					ReadDataFromUsbKey();
+					SetFormReadOnly();
+				}
+				else
+				{
+					InitControls();
+				}
+			}
+			catch (Exception ex)
 			{
-				InitControls();
+				Log.WriteExceptionLog(ex);
 			}
 		}
 
@@ -68,12 +88,12 @@ namespace DINInput_EUsbKey
 				txt_Company.Text = usb.Company;
 				txt_Mail.Text = usb.Mail;
 				txt_Tel.Text = usb.MobileTel;
-				txt_Notes.Text = usb.Notes;	
+				txt_Notes.Text = usb.Notes;
 			}
 
 			byte nLen = 0;
 			string strBuf = "";
-			DateTime parsedDate = new DateTime() ;
+			DateTime parsedDate = new DateTime();
 
 			//加工帳入力利用開始日を読み取る
 			if (!NCSecurity.GetData(1536, ref nLen))
@@ -95,7 +115,6 @@ namespace DINInput_EUsbKey
 			else
 			{
 				date_UseStartDay.Visible = false;
-				lb_UseStartDay.Visible = false;
 			}
 
 			nLen = 0;
@@ -121,7 +140,6 @@ namespace DINInput_EUsbKey
 			else
 			{
 				date_UseEndDay.Visible = false;
-				lb_UseEndDay.Visible = false;
 			}
 
 			strBuf = "";
@@ -157,7 +175,6 @@ namespace DINInput_EUsbKey
 			else
 			{
 				date_UseEFStartDay.Visible = false;
-				lb_UseEFStartDay.Visible = false;
 			}
 
 			nLen = 0;
@@ -183,39 +200,38 @@ namespace DINInput_EUsbKey
 			else
 			{
 				date_UseEFEndDay.Visible = false;
-				lb_UseEFEndDay.Visible = false;
 			}
 
-			nLen = 0;
+			strBuf = "";
 			//TPMシステム
-			if (!NCSecurity.GetData(1792, ref nLen))
+			if (!NCSecurity.GetData(1792, 1, ref strBuf))
 			{
 				ErrMsg = new ErrorMessage("CM00012");
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			check_TPM.Checked = nLen == 0 ? false : true;
+			check_TPM.Checked = strBuf == "1" ? true : false;
 
 
 			strBuf = "";
-			//CADグレードコントロール
-			if (!NCSecurity.GetData(1793, 1,ref strBuf))
+			//level
+			if (!NCSecurity.GetData(1793, 1, ref strBuf))
 			{
 				ErrMsg = new ErrorMessage("CM00012");
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			SetDINCAD(strBuf);
+			SetLevel(strBuf);
 
-			nLen = 0;
+			strBuf = "";
 			//アイコーサブコンフラグ
-			if (!NCSecurity.GetData(1594, ref nLen))
+			if (!NCSecurity.GetData(1594, 1, ref strBuf))
 			{
 				ErrMsg = new ErrorMessage("CM00012");
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			check_DINsubcon.Checked = nLen == 0 ? false : true;
+			check_DINsubcon.Checked = strBuf == "1" ? true : false;
 
 			nLen = 0;
 			//CADバージョンコントロール
@@ -225,7 +241,7 @@ namespace DINInput_EUsbKey
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			txt_CADVersion.Text = nLen.ToString("D2");
+			if (nLen != 255) txt_CADVersion.Text = nLen.ToString("D2");
 
 			nLen = 0;
 			//DINCAD2ターゲットCAD
@@ -235,7 +251,53 @@ namespace DINInput_EUsbKey
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
-			txt_CADTarget.Text = nLen.ToString();
+			//CAD
+			SetCad(nLen.ToString() == "255" ? "-1" : nLen.ToString());
+
+			nLen = 0;
+			strBuf = "";
+			parsedDate = new DateTime();
+			//CAD・加工帳オプション機能使用終了日
+			if (!NCSecurity.GetData(1083, ref nLen))
+			{
+				ErrMsg = new ErrorMessage("CM00012");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+			if (!NCSecurity.GetData(1084, nLen, ref strBuf))
+			{
+				ErrMsg = new ErrorMessage("CM00012");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+			if (DateTime.TryParseExact(strBuf, "yyyyMMdd", null, DateTimeStyles.None, out parsedDate))
+			{
+				date_CADOPUseEndDay.Value = parsedDate;
+			}
+			else
+			{
+				date_CADOPUseEndDay.Visible = false;
+			}
+
+			strBuf = "";
+			//CAD・加工帳オプション機能
+			if (!NCSecurity.GetData(1092, 10, ref strBuf))
+			{
+				ErrMsg = new ErrorMessage("CM00012");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+			SetCADOPFunctions(strBuf);
+
+			//DIN加工帳入力フラグ
+			nLen = 0;
+			if (!NCSecurity.GetData(1791, ref nLen))
+			{
+				ErrMsg = new ErrorMessage("CM00012");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
+			}
+			check_DINUseFlag.Checked = nLen == 1 ? true : false;
 		}
 
 		//フォームコントロールを読み取り専用に設定する
@@ -262,8 +324,8 @@ namespace DINInput_EUsbKey
 			check_SymbolOptions.Enabled = false;
 			date_UseEFStartDay.Enabled = false;
 			date_UseEFEndDay.Enabled = false;
-			cmb_DINCAD.Enabled = false;
-			txt_CADTarget.Enabled = false;
+			cmb_Level.Enabled = false;
+			cmb_Cad.Enabled = false;
 			txt_CADVersion.Enabled = false;
 			date_CADOPUseEndDay.Enabled = false;
 			check_01.Enabled = false;
@@ -281,6 +343,7 @@ namespace DINInput_EUsbKey
 			txt_Notes.Enabled = false;
 			btn_OK.Enabled = false;
 			btn_UpdateKeyRelease.Enabled = false;
+			check_DINUseFlag.Enabled = false;
 		}
 
 		//コントロールの初期化
@@ -290,6 +353,8 @@ namespace DINInput_EUsbKey
 			if (DisabledFalg)
 			{
 				check_CADGetInfo.Checked = false;
+				date_UseStartDay.Enabled = check_CADGetInfo.Checked;
+				date_UseEndDay.Enabled = check_CADGetInfo.Checked;
 				check_Weight.Checked = false;
 				check_QR.Checked = false;
 				check_SpecialCalculation.Checked = false;
@@ -305,13 +370,15 @@ namespace DINInput_EUsbKey
 			}
 			if (IsNew)
 			{
+				date_UseStartDay.Enabled = check_CADGetInfo.Checked;
+				date_UseEndDay.Enabled = check_CADGetInfo.Checked;
 				check_Weight.Checked = true;
 				check_HunchInput.Checked = true;
 				check_SpecialCalculation.Checked = true;
 				check_DatxRecovery.Checked = true;
 				date_UseEFStartDay.Enabled = check_SymbolOptions.Checked;
 				date_UseEFEndDay.Enabled = check_SymbolOptions.Checked;
-
+				check_DINUseFlag.Checked = true;
 			}
 			else
 			{
@@ -333,6 +400,8 @@ namespace DINInput_EUsbKey
 			txt_Mail.Text = usb.Mail.Trim();
 			//Tel
 			txt_Tel.Text = usb.MobileTel.Trim();
+			//DIN加工帳入力フラグ
+			check_DINUseFlag.Checked = usb.DINUseFlag == 1 ? true : false;
 			//加工帳入力利用開始日
 			date_UseStartDay.Text = usb.UseStartDay == null ? null : usb.UseStartDay.Value.ToString("yyyy/MM/dd");
 			//加工帳入力利用終了日
@@ -340,17 +409,19 @@ namespace DINInput_EUsbKey
 			//加工帳入力システム機能の設定
 			SetFunctions(usb.Functions);
 			//加工帳絵符利用開始日
-			date_UseEFStartDay.Value = usb.UseEFUStartDay.Value;
+			date_UseEFStartDay.Text = usb.UseEFUStartDay == null ? null : usb.UseEFUStartDay.Value.ToString("yyyy/MM/dd");
 			//加工帳絵符利用終了日
-			date_UseEFEndDay.Value = usb.UseEFUEndDay.Value;
-			//CADグレードコントロール
-			SetDINCAD(usb.DINCAD);
+			date_UseEFEndDay.Text = usb.UseEFUEndDay == null ? null : usb.UseEFUEndDay.Value.ToString("yyyy/MM/dd");
+			//Level
+			SetLevel(usb.DINCAD);
+			//CAD
+			SetCad(usb.CADTarget.ToString());
+
 			//CADバージョンコントロール
 			txt_CADVersion.Text = usb.CADVersion.ToString("D2");
-			//DINCAD2ターゲットCAD
-			txt_CADTarget.Text = usb.CADTarget.ToString();
+
 			//CAD・加工帳オプション機能使用終了日
-			date_CADOPUseEndDay.Value = usb.CADOPUseEndDay.Value;
+			date_CADOPUseEndDay.Text = usb.CADOPUseEndDay == null ? null : usb.CADOPUseEndDay.Value.ToString("yyyy/MM/dd");
 			//CAD・加工帳オプション機能
 			SetCADOPFunctions(usb.CADOPFunctions);
 			//TPMシステム
@@ -359,6 +430,10 @@ namespace DINInput_EUsbKey
 			check_DINsubcon.Checked = usb.DINsubcon == 0 ? false : true;
 			//備考
 			txt_Notes.Text = usb.Notes;
+			if (!check_DINUseFlag.Checked)
+			{
+				SetDINSystemControlReadOnly();
+			}
 		}
 
 		//活動フラグの設定
@@ -399,21 +474,23 @@ namespace DINInput_EUsbKey
 			if (string.IsNullOrEmpty(functions)) return;
 			char[] arry = functions.ToCharArray();
 			//CAD
-			check_CADGetInfo.Checked = arry[0] == '0' ? false : true;
+			check_CADGetInfo.Checked = arry[0] == '1' ? true : false;
+			date_UseStartDay.Enabled = check_CADGetInfo.Checked;
+			date_UseEndDay.Enabled = check_CADGetInfo.Checked;
 			//重量表　
-			check_Weight.Checked = arry[1] == '0' ? false : true;
+			check_Weight.Checked = arry[1] == '1' ? true : false;
 			//QR
-			check_QR.Checked = arry[2] == '0' ? false : true;
+			check_QR.Checked = arry[2] == '1' ? true : false;
 			//特殊計算
-			check_SpecialCalculation.Checked = arry[3] == '0' ? false : true;
+			check_SpecialCalculation.Checked = arry[3] == '1' ? true : false;
 			//ハンチ入力
-			check_HunchInput.Checked = arry[4] == '0' ? false : true;
+			check_HunchInput.Checked = arry[4] == '1' ? true : false;
 			//Datx復元
-			check_DatxRecovery.Checked = arry[5] == '0' ? false : true;
+			check_DatxRecovery.Checked = arry[5] == '1' ? true : false;
 			//SUMファイル
-			check_CreateSumFile.Checked = arry[6] == '0' ? false : true;
+			check_CreateSumFile.Checked = arry[6] == '1' ? true : false;
 			//加工帳絵符OP
-			check_SymbolOptions.Checked = arry[7] == '0' ? false : true;
+			check_SymbolOptions.Checked = arry[7] == '1' ? true : false;
 			date_UseEFStartDay.Enabled = check_SymbolOptions.Checked;
 			date_UseEFEndDay.Enabled = check_SymbolOptions.Checked;
 		}
@@ -441,39 +518,36 @@ namespace DINInput_EUsbKey
 			return functions.ToString();
 		}
 
-		//CADグレードコントロールの設定
-		private void SetDINCAD(string dincad)
+		//Levelグレードコントロールの設定
+		private void SetLevel(string dinLevel)
 		{
-			switch (dincad)
-			{
-				case "2":
-					cmb_DINCAD.SelectedIndex = 0;
-					break;
-				case "4":
-					cmb_DINCAD.SelectedIndex = 1;
-					break;
-				case "6":
-					cmb_DINCAD.SelectedIndex = 2;
-					break;
-				default:
-					break;
-			}
+			int index = Config.Level.FindIndex(x => x.StartsWith(dinLevel + "="));
+			cmb_Level.SelectedIndex = index;
+		}
+
+		//CADグレードコントロールの設定
+		private void SetCad(string dinCad)
+		{
+			int index = Config.CAD.FindIndex(x => x.StartsWith(dinCad + "="));
+			cmb_Cad.SelectedIndex = index;
+
 		}
 
 		//CAD・加工帳オプション機能の設定
 		private void SetCADOPFunctions(string cadopFunctions)
 		{
+			if (string.IsNullOrEmpty(cadopFunctions)) return;
 			char[] arry = cadopFunctions.ToCharArray();
-			check_01.Checked = arry[0] == '0' ? false : true;
-			check_02.Checked = arry[1] == '0' ? false : true;
-			check_03.Checked = arry[2] == '0' ? false : true;
-			check_04.Checked = arry[3] == '0' ? false : true;
-			check_05.Checked = arry[4] == '0' ? false : true;
-			check_06.Checked = arry[5] == '0' ? false : true;
-			check_07.Checked = arry[6] == '0' ? false : true;
-			check_08.Checked = arry[7] == '0' ? false : true;
-			check_09.Checked = arry[8] == '0' ? false : true;
-			check_10.Checked = arry[9] == '0' ? false : true;
+			check_01.Checked = arry[0] == '1' ? true : false;
+			check_02.Checked = arry[1] == '1' ? true : false;
+			check_03.Checked = arry[2] == '1' ? true : false;
+			check_04.Checked = arry[3] == '1' ? true : false;
+			check_05.Checked = arry[4] == '1' ? true : false;
+			check_06.Checked = arry[5] == '1' ? true : false;
+			check_07.Checked = arry[6] == '1' ? true : false;
+			check_08.Checked = arry[7] == '1' ? true : false;
+			check_09.Checked = arry[8] == '1' ? true : false;
+			check_10.Checked = arry[9] == '1' ? true : false;
 		}
 
 		//CAD・加工帳オプション機能を取得
@@ -493,12 +567,20 @@ namespace DINInput_EUsbKey
 			return cadopFunctions.ToString();
 		}
 
-		//CADグレードコントロールデータ初期化
+		// Level
+		private void InitCmbDinLevelItems()
+		{
+			foreach (string item in Config.Level)
+			{
+				cmb_Level.Items.Add(item.Split('=')[0]);
+			}
+		}
+		// Cad
 		private void InitCmbDinCADItems()
 		{
-			foreach (string item in _cmbDinCad_DataSource)
+			foreach (string item in Config.CAD)
 			{
-				cmb_DINCAD.Items.Add(item.Split('-')[0]);
+				cmb_Cad.Items.Add(item.Split('=')[0]);
 			}
 		}
 
@@ -529,7 +611,7 @@ namespace DINInput_EUsbKey
 		private bool AddEUSB()
 		{
 			UsbId usb = CreateUsbIdFromForm();
-			if (!WriteDataEUsb(usb)) return false;
+			if (!WriteDataEUsb(usb)) { Cursor = Cursors.Default; return false; }
 			if (!ServiceApi.AddEUsb(usb)) return false;
 			ErrMsg = new ErrorMessage("CM00009");
 			MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK);
@@ -540,7 +622,7 @@ namespace DINInput_EUsbKey
 		private bool UpdateEUSB()
 		{
 			UsbId usb = CreateUsbIdFromForm();
-			if (!WriteDataEUsb(usb)) return false;
+			if (!WriteDataEUsb(usb)) { Cursor = Cursors.Default; return false; }
 			if (!ServiceApi.UpdateEUsb(usb)) return false;
 			ErrMsg = new ErrorMessage("CM00011");
 			MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK);
@@ -597,6 +679,8 @@ namespace DINInput_EUsbKey
 			usb.MobileTel = txt_Tel.Text.Trim();
 			//活動フラグ
 			usb.ActFlag = GetEUsbState();
+			//DIN加工帳入力フラグ
+			usb.DINUseFlag = check_DINUseFlag.Checked ? 1 : 0;
 			//加工帳入力利用開始日
 			usb.UseStartDay = date_UseStartDay.Value;
 			//加工帳入力利用終了日
@@ -608,11 +692,11 @@ namespace DINInput_EUsbKey
 			//加工帳絵符利用終了日
 			usb.UseEFUEndDay = date_UseEFEndDay.Value;
 			//CADグレードコントロール
-			usb.DINCAD = string.IsNullOrEmpty(cmb_DINCAD.Text) ? " " : cmb_DINCAD.Text;
+			usb.DINCAD = string.IsNullOrEmpty(cmb_Level.Text) ? " " : cmb_Level.Text;
 			//CADバージョンコントロール
 			usb.CADVersion = string.IsNullOrEmpty(txt_CADVersion.Text) ? 00 : int.Parse(txt_CADVersion.Text);
 			//DINCAD2ターゲットCAD
-			usb.CADTarget = string.IsNullOrEmpty(txt_CADTarget.Text) ? 0 : int.Parse(txt_CADTarget.Text);
+			usb.CADTarget = string.IsNullOrEmpty(cmb_Cad.Text) ? -1 : int.Parse(cmb_Cad.Text);
 			//CAD・加工帳オプション機能使用終了日
 			usb.CADOPUseEndDay = date_CADOPUseEndDay.Value;
 			//CAD・加工帳オプション機能
@@ -696,8 +780,8 @@ namespace DINInput_EUsbKey
 				return false;
 			}
 
-			//使用区分
-			if (!NCSecurity.SetData(1791, 1))
+			//DIN加工帳入力フラグ(使用区分)
+			if (!NCSecurity.SetData(1791, (byte)usb.DINUseFlag))
 			{
 				ErrMsg = new ErrorMessage("CM00003");
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -747,7 +831,7 @@ namespace DINInput_EUsbKey
 			}
 
 			//TPMシステム
-			if (!NCSecurity.SetData(1792, (byte)usb.TMP))
+			if (!NCSecurity.SetData(1792, usb.TMP.ToString()))
 			{
 				ErrMsg = new ErrorMessage("CM00003");
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -763,7 +847,7 @@ namespace DINInput_EUsbKey
 			}
 
 			//アイコーサブコンフラグ
-			if (!NCSecurity.SetData(1594, (byte)usb.DINsubcon))
+			if (!NCSecurity.SetData(1594, usb.DINsubcon.ToString()))
 			{
 				ErrMsg = new ErrorMessage("CM00003");
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -785,6 +869,29 @@ namespace DINInput_EUsbKey
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return false;
 			}
+
+			//CAD・加工帳オプション機能使用終了日
+			if (!NCSecurity.SetData(1083, 8))
+			{
+				ErrMsg = new ErrorMessage("CM00003");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return false;
+			}
+			if (!NCSecurity.SetData(1084, usb.CADOPUseEndDay.Value.ToString("yyyyMMdd")))
+			{
+				ErrMsg = new ErrorMessage("CM00003");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return false;
+			}
+
+			//CAD・加工帳オプション機能
+			if (!NCSecurity.SetData(1092, usb.CADOPFunctions))
+			{
+				ErrMsg = new ErrorMessage("CM00003");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return false;
+			}
+
 			Cursor = Cursors.Default;
 			return true;
 		}
@@ -795,7 +902,7 @@ namespace DINInput_EUsbKey
 			UsbId usb = CreateUsbIdFromForm();
 			StringBuilder key = new StringBuilder();
 			//DIN入力システム利用可
-			key.Append("1,");
+			key.Append($"{usb.DINUseFlag},");
 			//キーＩＤ
 			key.Append($"{usb.EUsb_Id},");
 			//加工帳入力利用開始日
@@ -813,9 +920,15 @@ namespace DINInput_EUsbKey
 			//アイコーサブコンフラグ
 			key.Append($"{usb.DINsubcon},");
 			//CADバージョンコントロール
-			key.Append($"{(usb.CADVersion == 0 ? 255 : usb.CADVersion)},");
+			key.Append($"{usb.CADVersion},");
 			//DINCAD2ターゲットCAD
-			key.Append($"{(usb.CADTarget == 0 ? 255 : usb.CADTarget)}");
+			key.Append($"{(usb.CADTarget == -1 ? 255 : usb.CADTarget)},");
+			//TPM
+			//key.Append($"{usb.TMP},");
+			//CAD・加工帳オプション機能使用終了日
+			key.Append($"{usb.CADOPUseEndDay.Value.ToString("yyyy/MM/dd")},");
+			//CAD・加工帳オプション機能
+			key.Append($"{usb.CADOPFunctions}");
 
 			return key.ToString();
 		}
@@ -831,12 +944,15 @@ namespace DINInput_EUsbKey
 			if (saveFileDialog.ShowDialog() == DialogResult.OK)
 			{
 				string filePath = saveFileDialog.FileName;
-				Encryption.EncryptToFile(cert.ToString(), filePath);
+				Encryption.EncryptToFile(cert, filePath);
+
+				ErrMsg = new ErrorMessage("CM00013");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 		}
 
 		//Level再描画
-		private void cmb_DINCAD_DrawItem(object sender, DrawItemEventArgs e)
+		private void cmb_Level_DrawItem(object sender, DrawItemEventArgs e)
 		{
 			e.DrawBackground();
 			if (e.Index < 0) return;
@@ -848,20 +964,20 @@ namespace DINInput_EUsbKey
 
 			using (var brush = new SolidBrush(e.ForeColor))
 			{
-				e.Graphics.DrawString(_cmbDinCad_DataSource[e.Index], e.Font, brush, e.Bounds);
+				e.Graphics.DrawString(Config.Level[e.Index], e.Font, brush, e.Bounds);
 			}
 
 			e.DrawFocusRectangle();
 		}
 
 		//キーボード入力を無効にする
-		private void cmb_DINCAD_KeyPress(object sender, KeyPressEventArgs e)
+		private void cmb_Level_KeyPress(object sender, KeyPressEventArgs e)
 		{
 			e.Handled = true;
 		}
 
 		//キーボード操作の禁止
-		private void cmb_DINCAD_KeyDown(object sender, KeyEventArgs e)
+		private void cmb_Level_KeyDown(object sender, KeyEventArgs e)
 		{
 			e.SuppressKeyPress = true;
 		}
@@ -971,9 +1087,95 @@ namespace DINInput_EUsbKey
 		{
 			Close();
 		}
+
+		/// <summary>
+		/// CAD情報取込
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void check_CADGetInfo_CheckedChanged(object sender, EventArgs e)
+		{
+			date_UseStartDay.Enabled = check_CADGetInfo.Checked;
+			date_UseEndDay.Enabled = check_CADGetInfo.Checked;
+		}
+
+		private void cmb_Cad_DrawItem(object sender, DrawItemEventArgs e)
+		{
+			e.DrawBackground();
+			if (e.Index < 0) return;
+
+			Rectangle rectangle = new Rectangle(2, e.Bounds.Top + 2,
+					e.Bounds.Height, e.Bounds.Height - 4);
+			System.Drawing.Color animalColor = new System.Drawing.Color();
+			e.Graphics.FillRectangle(new SolidBrush(animalColor), rectangle);
+
+			using (var brush = new SolidBrush(e.ForeColor))
+			{
+				e.Graphics.DrawString(Config.CAD[e.Index], e.Font, brush, e.Bounds);
+			}
+
+			e.DrawFocusRectangle();
+		}
+
+		private void cmb_Cad_KeyDown(object sender, KeyEventArgs e)
+		{
+			e.SuppressKeyPress = true;
+		}
+
+		private void cmb_Cad_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			e.Handled = true;
+		}
+
+		private void check_DINUseFlag_CheckedChanged(object sender, EventArgs e)
+		{
+			if (!check_DINUseFlag.Checked)
+			{
+				SetDINSystemControlReadOnly();
+			}
+			else
+			{
+				SetDINSystemControlActive();
+			}
+		}
+
+		private void SetDINSystemControlReadOnly()
+		{
+			date_UseStartDay.Enabled = false;
+			date_UseEndDay.Enabled = false;
+			check_CADGetInfo.Enabled = false;
+			check_Weight.Enabled = false;
+			check_HunchInput.Enabled = false;
+			check_SpecialCalculation.Enabled = false;
+			check_DatxRecovery.Enabled = false;
+			check_QR.Enabled = false;
+			check_CreateSumFile.Enabled = false;
+			check_SymbolOptions.Enabled = false;
+			date_UseEFStartDay.Enabled = false;
+			date_UseEFEndDay.Enabled = false;
+		}
+
+		private void SetDINSystemControlActive()
+		{
+			check_CADGetInfo.Enabled = true;
+			if (check_CADGetInfo.Checked)
+			{
+				date_UseStartDay.Enabled = true;
+				date_UseEndDay.Enabled = true;
+			}
+			check_Weight.Enabled = true;
+			check_HunchInput.Enabled = true;
+			check_SpecialCalculation.Enabled = true;
+			check_DatxRecovery.Enabled = true;
+			check_QR.Enabled = true;
+			check_CreateSumFile.Enabled = true;
+			check_SymbolOptions.Enabled = true;
+			if (check_SymbolOptions.Checked)
+			{
+				date_UseEFStartDay.Enabled = true;
+				date_UseEFEndDay.Enabled = true;
+			}
+		}
+
 	}
-
-
-
-
 }

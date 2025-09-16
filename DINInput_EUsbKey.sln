@@ -1,13 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35818.85 d17.13
+VisualStudioVersion = 17.13.35818.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DINInput_EUsbKey", "DINInput_EUsbKey\DINInput_EUsbKey.csproj", "{DEB18603-5089-43C5-B97D-D04F3F98FC11}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DINServerObject", "DINServerObject\DINServerObject.csproj", "{019C79DE-E0C1-49E0-B792-2B48B1B673D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NCFrameWork", "NCFrameWork\NCFrameWork.csproj", "{16513C64-8875-4C46-981D-DEF6158CFD6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLib", "CommonLib\CommonLib.csproj", "{3A555083-BFBF-4F44-8064-A6E6DF0CF9EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DINEUsbServiceConsole", "DINEUsbServiceConsole\DINEUsbServiceConsole.csproj", "{3DD51266-DD91-43AF-AF1B-C4EF21A93CF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DINEUsbWinService", "DINEUsbWinService\DINEUsbWinService.csproj", "{509DB63F-3CEE-43B1-99C4-D16A2B275EBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +33,18 @@ Global
 		{16513C64-8875-4C46-981D-DEF6158CFD6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16513C64-8875-4C46-981D-DEF6158CFD6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16513C64-8875-4C46-981D-DEF6158CFD6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A555083-BFBF-4F44-8064-A6E6DF0CF9EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A555083-BFBF-4F44-8064-A6E6DF0CF9EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A555083-BFBF-4F44-8064-A6E6DF0CF9EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A555083-BFBF-4F44-8064-A6E6DF0CF9EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DD51266-DD91-43AF-AF1B-C4EF21A93CF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD51266-DD91-43AF-AF1B-C4EF21A93CF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD51266-DD91-43AF-AF1B-C4EF21A93CF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD51266-DD91-43AF-AF1B-C4EF21A93CF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{509DB63F-3CEE-43B1-99C4-D16A2B275EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509DB63F-3CEE-43B1-99C4-D16A2B275EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509DB63F-3CEE-43B1-99C4-D16A2B275EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509DB63F-3CEE-43B1-99C4-D16A2B275EBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

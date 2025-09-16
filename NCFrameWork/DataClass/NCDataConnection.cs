@@ -50,7 +50,7 @@ namespace DI.NCFrameWork
 		{
 			get { return s_transaction; }
 		}
-		#endregion
+
 
 		/// <summary>
 		/// データベース接続文字列
@@ -75,6 +75,8 @@ namespace DI.NCFrameWork
 		{
 			s_conn = null;
 		}
+
+		#endregion
 
 		#region データベースのコネクションを閉じる
 		//************************************************************************

@@ -2,7 +2,7 @@
 
 namespace DINServerObject
 {
-	public class UsbId
+	public class UsbId:CMObjectDC
 	{
 		public UsbId() { }
 
@@ -25,7 +25,7 @@ namespace DINServerObject
 		public int ActFlag { get; set; }
 
 		//Key作成日
-		public DateTime KeyPublisherDate { get; set; }
+		public DateTime? KeyPublisherDate { get; set; }
 
 		//Key更新日
 		public DateTime KeyUpdateDate { get; set; }
@@ -33,7 +33,6 @@ namespace DINServerObject
 		//加工帳入力利用開始日
 		public DateTime? UseStartDay { get; set; }
 	
-
 		//加工帳入力利用終了日
 		public DateTime? UseEndDay { get; set; }
 
@@ -72,6 +71,9 @@ namespace DINServerObject
 
 		//自働更新
 		public int UpdateFlg { get; set; }
+
+		//DIN加工帳入力フラグ
+		public int DINUseFlag { get; set; }
 
 	}
 }

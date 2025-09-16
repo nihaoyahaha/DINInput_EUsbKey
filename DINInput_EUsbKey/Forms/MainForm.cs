@@ -1,8 +1,12 @@
 ﻿using C1.Win.C1FlexGrid;
 using DI.NCFrameWork;
 using DINServerObject;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 using System.Windows.Forms;
 
 namespace DINInput_EUsbKey
@@ -22,7 +26,7 @@ namespace DINInput_EUsbKey
 		private int[] _colWidths = new int[] { 80,150,100,150,100,100,
 									   100,100,100,100,
 									   100,100,100,
-		                               100,200};
+									   100,200};
 
 		private TextAlignEnum[] _alignCols = new TextAlignEnum[] {
 			TextAlignEnum.CenterCenter, TextAlignEnum.CenterCenter,
@@ -37,6 +41,8 @@ namespace DINInput_EUsbKey
 		//クエリー条件
 		private UsbIdQueryDto _queryCriteria = new UsbIdQueryDto();
 
+		public ParaConfig config = new ParaConfig();
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -44,6 +50,15 @@ namespace DINInput_EUsbKey
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
+			config = new ConfigurationBuilder()
+				.AddJsonFile("App.json", optional: false, reloadOnChange: true)
+				.Build()
+				.GetSection("ParaConfig")
+				.Get<ParaConfig>();
+
+			List<string> levelList = config.Level;
+			List<string> cadList = config.CAD;
+
 			InitfgMainHeader();
 			SearchData();
 		}
@@ -106,8 +121,6 @@ namespace DINInput_EUsbKey
 				cr = fg_main.GetCellRange(0, 14, 1, 14);
 				fg_main.MergedRanges.Add(cr);
 				fg_main.SetData(0, "Notes", "備考");
-
-
 			}
 			catch (Exception ex)
 			{
@@ -164,70 +177,62 @@ namespace DINInput_EUsbKey
 		}
 
 		/// <summary>
-		/// DINCADの名前を取得
-		/// </summary>
-		/// <param name="dincad">DINCADcode</param>
-		/// <returns></returns>
-		private string GetDINCADName(string dincad)
-		{
-			switch (dincad)
-			{
-				case "2": return "DINCAD30";
-				case "4": return "DINCAD50";
-				case "6": return "DINCAD100";
-				default: return "";
-			}
-		}
-
-		/// <summary>
 		/// 検索
 		/// </summary>
 		private void SearchData()
 		{
-			//条件付きクエリー
-			AddQueryCriteria();
-			List<UsbId> usbIds = ServiceApi.GetEUsbList(_queryCriteria);
-			fg_main.Rows.Count = 2;
-			if (usbIds != null && usbIds.Count > 0)
+			try
 			{
-				int num = 2;
-				fg_main.Rows.Count = usbIds.Count + 2;
-				usbIds.ForEach(x =>
+				//条件付きクエリー
+				AddQueryCriteria();
+				List<UsbId> usbIds = ServiceApi.GetEUsbList(_queryCriteria);
+				fg_main.Rows.Count = 2;
+				if (usbIds != null && usbIds.Count > 0)
 				{
-					//状態
-					string actFlag = GetActFlagName(x.ActFlag);
-					fg_main.SetData(num, "ActFlag", actFlag);
-					//Key_ID
-					fg_main.SetData(num, "EUSB_ID", x.EUsb_Id);
-					//利用者名
-					fg_main.SetData(num, "UserName", x.UserName);
-					//会社名
-					fg_main.SetData(num, "Company", x.Company);
-					//Key作成日
-					fg_main.SetData(num, "KeyPublisherDate", x.KeyPublisherDate.ToString("yyyy/MM/dd"));
-					//Key更新日
-					fg_main.SetData(num, "KeyUpdateDate", x.KeyUpdateDate.ToString("yyyy/MM/dd"));
-					//加工帳入力利用開始日
-					fg_main.SetData(num, "UseStartDay", x.UseStartDay == null ? "" : x.UseStartDay.Value.ToString("yyyy/MM/dd"));
-					//加工帳入力利用終了日
-					fg_main.SetData(num, "UseEndDay", x.UseEndDay == null ? "" : x.UseEndDay.Value.ToString("yyyy/MM/dd"));
-					//加工帳絵符利用開始日
-					fg_main.SetData(num, "UseEFUStartDay", x.UseEFUStartDay.Value.ToString("yyyy/MM/dd"));
-					//加工帳絵符利用終了日
-					fg_main.SetData(num, "UseEFUEndDay", x.UseEFUEndDay.Value.ToString("yyyy/MM/dd"));
-					//Level
-					string dincadName = GetDINCADName(x.DINCAD);
-					fg_main.SetData(num, "DINCAD", dincadName);
-					//TargetCAD
-					fg_main.SetData(num, "CADTarget", x.CADTarget);
-					//CADVersion
-					fg_main.SetData(num, "CADVersion", x.CADVersion);
-					//利用終了日
-					fg_main.SetData(num, "CADOPUseEndDay", x.CADOPUseEndDay.Value.ToString("yyyy/MM/dd"));
-					//備考
-					fg_main.SetData(num, "Notes", x.Notes);
-					num++;
-				});
+					int num = 2;
+					fg_main.Rows.Count = usbIds.Count + 2;
+					usbIds.ForEach(x =>
+					{
+						//状態
+						string actFlag = GetActFlagName(x.ActFlag);
+						fg_main.SetData(num, "ActFlag", actFlag);
+						//Key_ID
+						fg_main.SetData(num, "EUSB_ID", x.EUsb_Id);
+						//利用者名
+						fg_main.SetData(num, "UserName", x.UserName);
+						//会社名
+						fg_main.SetData(num, "Company", x.Company);
+						//Key作成日
+						fg_main.SetData(num, "KeyPublisherDate", x.KeyPublisherDate == null ? "" : x.KeyPublisherDate.Value.ToString("yyyy/MM/dd"));
+						//Key更新日
+						fg_main.SetData(num, "KeyUpdateDate", x.KeyUpdateDate.ToString("yyyy/MM/dd"));
+						//加工帳入力利用開始日
+						fg_main.SetData(num, "UseStartDay", x.UseStartDay == null ? "" : x.UseStartDay.Value.ToString("yyyy/MM/dd"));
+						//加工帳入力利用終了日
+						fg_main.SetData(num, "UseEndDay", x.UseEndDay == null ? "" : x.UseEndDay.Value.ToString("yyyy/MM/dd"));
+						//加工帳絵符利用開始日
+						fg_main.SetData(num, "UseEFUStartDay", x.UseEFUStartDay == null ? "" : x.UseEFUStartDay.Value.ToString("yyyy/MM/dd"));
+						//加工帳絵符利用終了日
+						fg_main.SetData(num, "UseEFUEndDay", x.UseEFUEndDay == null ? "" : x.UseEFUEndDay.Value.ToString("yyyy/MM/dd"));
+						//Level
+						string levelName = config.Level.FirstOrDefault(p => p.StartsWith(x.DINCAD + "="));
+						fg_main.SetData(num, "DINCAD", levelName);
+						//TargetCAD
+						string cadName = config.CAD.FirstOrDefault(p => p.StartsWith(x.CADTarget + "="));
+						fg_main.SetData(num, "CADTarget", cadName);
+						//CADVersion
+						fg_main.SetData(num, "CADVersion", x.CADVersion.ToString("D2"));
+						//利用終了日
+						fg_main.SetData(num, "CADOPUseEndDay", x.CADOPUseEndDay == null ? "" : x.CADOPUseEndDay.Value.ToString("yyyy/MM/dd"));
+						//備考
+						fg_main.SetData(num, "Notes", x.Notes);
+						num++;
+					});
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.WriteExceptionLog(ex);
 			}
 		}
 
@@ -308,7 +313,7 @@ namespace DINInput_EUsbKey
 				return false;
 			}
 			//DINCAD(1535)
-			if (!NCSecurity.SetData(1535, 1))
+			if (!NCSecurity.SetData(1535, 0))
 			{
 				ErrMsg = new ErrorMessage("CM00003");
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -322,12 +327,45 @@ namespace DINInput_EUsbKey
 				return false;
 			}
 			//TPM(1792)
-			if (!NCSecurity.SetData(1536, new string(' ', 64)))
+			if (!NCSecurity.SetData(1792, "0"))
 			{
 				ErrMsg = new ErrorMessage("CM00003");
 				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return false;
 			}
+
+			//アイコーサブコンフラグ(1594)
+			if (!NCSecurity.SetData(1594, "0"))
+			{
+				ErrMsg = new ErrorMessage("CM00003");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return false;
+			}
+
+			//CADグレードコントロール(1793)
+			if (!NCSecurity.SetData(1793, " "))
+			{
+				ErrMsg = new ErrorMessage("CM00003");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return false;
+			}
+
+			//DINCAD2ターゲットCAD
+			if (!NCSecurity.SetData(1797, 255))
+			{
+				ErrMsg = new ErrorMessage("CM00003");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return false;
+			}
+
+			// CAD・加工帳オプション機能(1083-1101)
+			if (!NCSecurity.SetData(1083, new string(' ', 19)))
+			{
+				ErrMsg = new ErrorMessage("CM00003");
+				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return false;
+			}
+
 			ErrMsg = new ErrorMessage("CM00004");
 			MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK);
 			return true;
@@ -361,7 +399,7 @@ namespace DINInput_EUsbKey
 
 		//Key認識
 		private void btn_KeyRecognition_Click(object sender, EventArgs e)
-		{	
+		{
 			if (!NCSecurity.CheckKey())
 			{
 				ErrMsg = new ErrorMessage("CM99999");
@@ -373,80 +411,116 @@ namespace DINInput_EUsbKey
 			EUsb usb = new EUsb();
 			usb.EUsbId = eUsbId;
 			usb.IsReadOnly = true;
+			usb.FormText = "eUSBのKey認識";
+			usb.Config = config;
 			usb.ShowDialog();
 		}
 
 		//Key初期化
 		private void btn_KeyInitialization_Click(object sender, EventArgs e)
 		{
-			if (!NCSecurity.CheckKey())
+			try
 			{
-				ErrMsg = new ErrorMessage("CM99999");
-				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
+				if (!NCSecurity.CheckKey())
+				{
+					ErrMsg = new ErrorMessage("CM99999");
+					MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+					return;
+				}
+				string eUsbId = NCSecurity.GetEUsbID();
+				ErrMsg = ServiceApi.CheckeUsbExists(eUsbId) ? new ErrorMessage("CM00002") : new ErrorMessage("CM00001");
+				bool updateDbFlag = ErrMsg.ErrorCode == "CM00002";
+				if (DialogResult.Yes == MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION,
+						   MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+				{
+					Cursor = Cursors.WaitCursor;
+					if (updateDbFlag) ServiceApi.KeyInitialization(eUsbId);
+					InitKey();
+					SearchData();
+					Cursor = Cursors.Default;
+				}
 			}
-			string eUsbId = NCSecurity.GetEUsbID();
-			ErrMsg = ServiceApi.CheckeUsbExists(eUsbId) ? new ErrorMessage("CM00002") : new ErrorMessage("CM00001");
-			bool updateDbFlag = ErrMsg.ErrorCode == "CM00002";
-			if (DialogResult.Yes == MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION,
-					   MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+			catch (Exception ex)
 			{
-				Cursor = Cursors.WaitCursor;
-				if (updateDbFlag) ServiceApi.KeyInitialization(eUsbId);
-				InitKey();
-				Cursor = Cursors.Default;
+				Log.WriteExceptionLog(ex);
 			}
 		}
 
 		//Key作成
 		private void btn_KeyCreate_Click(object sender, EventArgs e)
 		{
-			//EUsbキーのIDを取得する
-			string eUsbId = NCSecurity.GetEUsbID();
-			if (string.IsNullOrEmpty(eUsbId))
+			try
 			{
-				ErrMsg = new ErrorMessage("CM99999");
-				MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return;
+				//EUsbキーのIDを取得する
+				string eUsbId = NCSecurity.GetEUsbID();
+				if (string.IsNullOrEmpty(eUsbId))
+				{
+					ErrMsg = new ErrorMessage("CM99999");
+					MessageBox.Show(ErrMsg.ErrorMsg, MSG_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+					return;
+				}
+				if (!CheckInitialization()) return;
+				bool isKeyExist = ServiceApi.CheckeUsbExists(eUsbId);
+				EUsb form = new EUsb();
+				form.EUsbId = eUsbId;
+				form.IsNew = !isKeyExist;
+				form.FormText = "eUSBのKey作成";
+				form.Config = config;
+				form.CallParetnRefreshData += () =>
+				{
+					int selectedRow = fg_main.Row;
+					SearchData();
+					fg_main.Row = selectedRow;
+				};
+				form.ShowDialog();
 			}
-			if (!CheckInitialization()) return;
-			bool isKeyExist = ServiceApi.CheckeUsbExists(eUsbId);
-			EUsb form = new EUsb();
-			form.EUsbId = eUsbId;
-			form.IsNew = !isKeyExist;
-			form.CallParetnRefreshData += () => {
-				int selectedRow = fg_main.Row;
-				SearchData();
-				fg_main.Row = selectedRow;
-			};
-			form.ShowDialog();
+			catch (Exception ex)
+			{
+				Log.WriteExceptionLog(ex);
+			}
 		}
 
 		//Key更新
 		private void btn_KeyUpdate_Click(object sender, EventArgs e)
 		{
-			if (fg_main.Rows.Count <= 1) return;
-			if (fg_main.Row <= 0) fg_main.Row = 1;
-			string selectedKeyId = PFunc.ObjectToString(fg_main.GetData(fg_main.Row, "EUSB_ID"));
-			//USB挿入キー存在チェック 挿入している場合
-			bool disabledFlg =false;
-			string localKeyId = NCSecurity.GetEUsbID();
-			//’存在しない場合:利用開始日と利用終了日が編集不可
-			if (string.IsNullOrEmpty(localKeyId)) disabledFlg = true;
-			//存在する場合 一覧選択されたUSBキと挿入している場合が不一致の場合:利用開始日と利用終了日が編集不可
-			else if (selectedKeyId != localKeyId) disabledFlg = true;
+			try
+			{
+				if (fg_main.Rows.Count <= 2) return;
+				if (fg_main.Row <= 0) fg_main.Row = 1;
+				string selectedKeyId = PFunc.ObjectToString(fg_main.GetData(fg_main.Row, "EUSB_ID"));
+				//USB挿入キー存在チェック 挿入している場合
+				bool disabledFlg = false;
+				string localKeyId = NCSecurity.GetEUsbID();
+				//’存在しない場合:利用開始日と利用終了日が編集不可
+				if (string.IsNullOrEmpty(localKeyId)) disabledFlg = true;
+				//存在する場合 一覧選択されたUSBキと挿入している場合が不一致の場合:利用開始日と利用終了日が編集不可
+				else if (selectedKeyId != localKeyId) disabledFlg = true;
 
-			EUsb usb = new EUsb();
-			usb.EUsbId = selectedKeyId;
-			usb.IsNew = false;
-			usb.DisabledFalg = disabledFlg;
-			usb.CallParetnRefreshData += () => {
-				int selectedRow = fg_main.Row;
-				SearchData();
-				fg_main.Row = selectedRow;
-			};
-			usb.ShowDialog();
+				EUsb usb = new EUsb();
+				usb.EUsbId = selectedKeyId;
+				usb.IsNew = false;
+				usb.DisabledFalg = disabledFlg;
+				usb.FormText = "eUSBのKey更新";
+				usb.Config = config;
+				usb.CallParetnRefreshData += () =>
+				{
+					int selectedRow = fg_main.Row;
+					SearchData();
+					fg_main.Row = selectedRow;
+				};
+				usb.ShowDialog();
+			}
+			catch (Exception ex)
+			{
+				Log.WriteExceptionLog(ex);
+			}
 		}
-	
+
+	}
+
+	public class ParaConfig
+	{
+		public List<string> Level { get; set; }
+		public List<string> CAD { get; set; }
 	}
 }

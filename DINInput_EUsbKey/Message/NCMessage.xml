@@ -22,7 +22,7 @@
   <Message id="CM00010" msg="eUSBキーを更新します、よろしいですか?" />
   <Message id="CM00011" msg="eUSBキーを更新しました。" />
   <Message id="CM00012" msg="eUSBキーを読み込み失敗しました。" />
-  <Message id="CM00013" msg="eUSB認証ファイルを作成しました。"/>
+
 
   <Message id="CM99999" msg="eUSBキーが見つかりません。eUSBキーを挿入してください。" />
 </MessageInfo>

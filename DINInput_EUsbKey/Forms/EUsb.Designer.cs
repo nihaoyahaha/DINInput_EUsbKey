@@ -60,6 +60,7 @@
 			this.date_UseEFStartDay = new System.Windows.Forms.DateTimePicker();
 			this.date_UseEFEndDay = new System.Windows.Forms.DateTimePicker();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.cmb_Cad = new System.Windows.Forms.ComboBox();
 			this.check_10 = new System.Windows.Forms.CheckBox();
 			this.check_09 = new System.Windows.Forms.CheckBox();
 			this.check_08 = new System.Windows.Forms.CheckBox();
@@ -70,15 +71,14 @@
 			this.check_03 = new System.Windows.Forms.CheckBox();
 			this.check_02 = new System.Windows.Forms.CheckBox();
 			this.check_01 = new System.Windows.Forms.CheckBox();
-			this.cmb_DINCAD = new System.Windows.Forms.ComboBox();
+			this.cmb_Level = new System.Windows.Forms.ComboBox();
 			this.label14 = new System.Windows.Forms.Label();
 			this.label11 = new System.Windows.Forms.Label();
 			this.txt_CADVersion = new System.Windows.Forms.TextBox();
 			this.label13 = new System.Windows.Forms.Label();
-			this.txt_CADTarget = new System.Windows.Forms.TextBox();
 			this.label12 = new System.Windows.Forms.Label();
 			this.date_CADOPUseEndDay = new System.Windows.Forms.DateTimePicker();
-			this.label15 = new System.Windows.Forms.Label();
+			this.lb_CADOPUseEndDay = new System.Windows.Forms.Label();
 			this.check_TPM = new System.Windows.Forms.CheckBox();
 			this.check_DINsubcon = new System.Windows.Forms.CheckBox();
 			this.label16 = new System.Windows.Forms.Label();
@@ -87,6 +87,7 @@
 			this.btn_UpdateKeyRelease = new System.Windows.Forms.Button();
 			this.btn_Close = new System.Windows.Forms.Button();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.check_DINUseFlag = new System.Windows.Forms.CheckBox();
 			this.groupBox1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
@@ -107,7 +108,7 @@
 			this.rdb_Active.Location = new System.Drawing.Point(4, 5);
 			this.rdb_Active.Name = "rdb_Active";
 			this.rdb_Active.Size = new System.Drawing.Size(59, 16);
-			this.rdb_Active.TabIndex = 1;
+			this.rdb_Active.TabIndex = 0;
 			this.rdb_Active.TabStop = true;
 			this.rdb_Active.Text = "活動中";
 			this.rdb_Active.UseVisualStyleBackColor = true;
@@ -129,7 +130,7 @@
 			this.rdb_loss.Location = new System.Drawing.Point(153, 5);
 			this.rdb_loss.Name = "rdb_loss";
 			this.rdb_loss.Size = new System.Drawing.Size(47, 16);
-			this.rdb_loss.TabIndex = 1;
+			this.rdb_loss.TabIndex = 2;
 			this.rdb_loss.TabStop = true;
 			this.rdb_loss.Text = "紛失";
 			this.rdb_loss.UseVisualStyleBackColor = true;
@@ -140,7 +141,7 @@
 			this.rdb_cancel.Location = new System.Drawing.Point(224, 5);
 			this.rdb_cancel.Name = "rdb_cancel";
 			this.rdb_cancel.Size = new System.Drawing.Size(47, 16);
-			this.rdb_cancel.TabIndex = 1;
+			this.rdb_cancel.TabIndex = 3;
 			this.rdb_cancel.TabStop = true;
 			this.rdb_cancel.Text = "廃止";
 			this.rdb_cancel.UseVisualStyleBackColor = true;
@@ -158,10 +159,9 @@
 			// 
 			this.txt_KeyID.Enabled = false;
 			this.txt_KeyID.Location = new System.Drawing.Point(82, 52);
-			this.txt_KeyID.MaxLength = 50;
 			this.txt_KeyID.Name = "txt_KeyID";
 			this.txt_KeyID.Size = new System.Drawing.Size(196, 21);
-			this.txt_KeyID.TabIndex = 2;
+			this.txt_KeyID.TabIndex = 1;
 			// 
 			// label3
 			// 
@@ -195,12 +195,12 @@
 			this.txt_UserName.MaxLength = 50;
 			this.txt_UserName.Name = "txt_UserName";
 			this.txt_UserName.Size = new System.Drawing.Size(196, 21);
-			this.txt_UserName.TabIndex = 2;
+			this.txt_UserName.TabIndex = 3;
 			// 
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(23, 136);
+			this.label5.Location = new System.Drawing.Point(31, 136);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(53, 12);
 			this.label5.TabIndex = 0;
@@ -212,12 +212,12 @@
 			this.txt_Mail.MaxLength = 50;
 			this.txt_Mail.Name = "txt_Mail";
 			this.txt_Mail.Size = new System.Drawing.Size(196, 21);
-			this.txt_Mail.TabIndex = 2;
+			this.txt_Mail.TabIndex = 4;
 			// 
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(41, 163);
+			this.label6.Location = new System.Drawing.Point(43, 163);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(35, 12);
 			this.label6.TabIndex = 0;
@@ -229,12 +229,12 @@
 			this.txt_Tel.MaxLength = 50;
 			this.txt_Tel.Name = "txt_Tel";
 			this.txt_Tel.Size = new System.Drawing.Size(196, 21);
-			this.txt_Tel.TabIndex = 2;
+			this.txt_Tel.TabIndex = 5;
 			// 
 			// lb_UseStartDay
 			// 
 			this.lb_UseStartDay.AutoSize = true;
-			this.lb_UseStartDay.Location = new System.Drawing.Point(11, 204);
+			this.lb_UseStartDay.Location = new System.Drawing.Point(12, 217);
 			this.lb_UseStartDay.Name = "lb_UseStartDay";
 			this.lb_UseStartDay.Size = new System.Drawing.Size(77, 12);
 			this.lb_UseStartDay.TabIndex = 0;
@@ -242,15 +242,15 @@
 			// 
 			// date_UseStartDay
 			// 
-			this.date_UseStartDay.Location = new System.Drawing.Point(82, 198);
+			this.date_UseStartDay.Location = new System.Drawing.Point(83, 211);
 			this.date_UseStartDay.Name = "date_UseStartDay";
 			this.date_UseStartDay.Size = new System.Drawing.Size(130, 21);
-			this.date_UseStartDay.TabIndex = 3;
+			this.date_UseStartDay.TabIndex = 6;
 			// 
 			// lb_UseEndDay
 			// 
 			this.lb_UseEndDay.AutoSize = true;
-			this.lb_UseEndDay.Location = new System.Drawing.Point(249, 203);
+			this.lb_UseEndDay.Location = new System.Drawing.Point(250, 216);
 			this.lb_UseEndDay.Name = "lb_UseEndDay";
 			this.lb_UseEndDay.Size = new System.Drawing.Size(77, 12);
 			this.lb_UseEndDay.TabIndex = 0;
@@ -258,88 +258,89 @@
 			// 
 			// date_UseEndDay
 			// 
-			this.date_UseEndDay.Location = new System.Drawing.Point(320, 198);
+			this.date_UseEndDay.Location = new System.Drawing.Point(321, 211);
 			this.date_UseEndDay.Name = "date_UseEndDay";
 			this.date_UseEndDay.Size = new System.Drawing.Size(130, 21);
-			this.date_UseEndDay.TabIndex = 3;
+			this.date_UseEndDay.TabIndex = 7;
 			// 
 			// check_CADGetInfo
 			// 
 			this.check_CADGetInfo.AutoSize = true;
-			this.check_CADGetInfo.Location = new System.Drawing.Point(15, 226);
+			this.check_CADGetInfo.Location = new System.Drawing.Point(16, 239);
 			this.check_CADGetInfo.Name = "check_CADGetInfo";
 			this.check_CADGetInfo.Size = new System.Drawing.Size(90, 16);
-			this.check_CADGetInfo.TabIndex = 4;
+			this.check_CADGetInfo.TabIndex = 8;
 			this.check_CADGetInfo.Text = "CAD情報取込";
 			this.check_CADGetInfo.UseVisualStyleBackColor = true;
+			this.check_CADGetInfo.CheckedChanged += new System.EventHandler(this.check_CADGetInfo_CheckedChanged);
 			// 
 			// check_Weight
 			// 
 			this.check_Weight.AutoSize = true;
-			this.check_Weight.Location = new System.Drawing.Point(15, 248);
+			this.check_Weight.Location = new System.Drawing.Point(16, 261);
 			this.check_Weight.Name = "check_Weight";
 			this.check_Weight.Size = new System.Drawing.Size(60, 16);
-			this.check_Weight.TabIndex = 4;
+			this.check_Weight.TabIndex = 9;
 			this.check_Weight.Text = "重量表";
 			this.check_Weight.UseVisualStyleBackColor = true;
 			// 
 			// check_HunchInput
 			// 
 			this.check_HunchInput.AutoSize = true;
-			this.check_HunchInput.Location = new System.Drawing.Point(117, 248);
+			this.check_HunchInput.Location = new System.Drawing.Point(118, 261);
 			this.check_HunchInput.Name = "check_HunchInput";
 			this.check_HunchInput.Size = new System.Drawing.Size(60, 16);
-			this.check_HunchInput.TabIndex = 4;
+			this.check_HunchInput.TabIndex = 10;
 			this.check_HunchInput.Text = "ハンチ";
 			this.check_HunchInput.UseVisualStyleBackColor = true;
 			// 
 			// check_SpecialCalculation
 			// 
 			this.check_SpecialCalculation.AutoSize = true;
-			this.check_SpecialCalculation.Location = new System.Drawing.Point(230, 248);
+			this.check_SpecialCalculation.Location = new System.Drawing.Point(231, 261);
 			this.check_SpecialCalculation.Name = "check_SpecialCalculation";
 			this.check_SpecialCalculation.Size = new System.Drawing.Size(72, 16);
-			this.check_SpecialCalculation.TabIndex = 4;
+			this.check_SpecialCalculation.TabIndex = 11;
 			this.check_SpecialCalculation.Text = "特殊計算";
 			this.check_SpecialCalculation.UseVisualStyleBackColor = true;
 			// 
 			// check_DatxRecovery
 			// 
 			this.check_DatxRecovery.AutoSize = true;
-			this.check_DatxRecovery.Location = new System.Drawing.Point(348, 248);
+			this.check_DatxRecovery.Location = new System.Drawing.Point(349, 261);
 			this.check_DatxRecovery.Name = "check_DatxRecovery";
-			this.check_DatxRecovery.Size = new System.Drawing.Size(72, 16);
-			this.check_DatxRecovery.TabIndex = 4;
-			this.check_DatxRecovery.Text = "Datx復元";
+			this.check_DatxRecovery.Size = new System.Drawing.Size(66, 16);
+			this.check_DatxRecovery.TabIndex = 12;
+			this.check_DatxRecovery.Text = "DAT復元";
 			this.check_DatxRecovery.UseVisualStyleBackColor = true;
 			// 
 			// check_QR
 			// 
 			this.check_QR.AutoSize = true;
-			this.check_QR.Location = new System.Drawing.Point(15, 270);
+			this.check_QR.Location = new System.Drawing.Point(16, 283);
 			this.check_QR.Name = "check_QR";
 			this.check_QR.Size = new System.Drawing.Size(60, 16);
-			this.check_QR.TabIndex = 4;
+			this.check_QR.TabIndex = 13;
 			this.check_QR.Text = "携帯QR";
 			this.check_QR.UseVisualStyleBackColor = true;
 			// 
 			// check_CreateSumFile
 			// 
 			this.check_CreateSumFile.AutoSize = true;
-			this.check_CreateSumFile.Location = new System.Drawing.Point(117, 270);
+			this.check_CreateSumFile.Location = new System.Drawing.Point(118, 283);
 			this.check_CreateSumFile.Name = "check_CreateSumFile";
 			this.check_CreateSumFile.Size = new System.Drawing.Size(114, 16);
-			this.check_CreateSumFile.TabIndex = 4;
-			this.check_CreateSumFile.Text = "SUMファイル作成";
+			this.check_CreateSumFile.TabIndex = 14;
+			this.check_CreateSumFile.Text = "Sumファイル作成";
 			this.check_CreateSumFile.UseVisualStyleBackColor = true;
 			// 
 			// check_SymbolOptions
 			// 
 			this.check_SymbolOptions.AutoSize = true;
-			this.check_SymbolOptions.Location = new System.Drawing.Point(15, 313);
+			this.check_SymbolOptions.Location = new System.Drawing.Point(16, 326);
 			this.check_SymbolOptions.Name = "check_SymbolOptions";
 			this.check_SymbolOptions.Size = new System.Drawing.Size(108, 16);
-			this.check_SymbolOptions.TabIndex = 4;
+			this.check_SymbolOptions.TabIndex = 15;
 			this.check_SymbolOptions.Text = "絵符オプション";
 			this.check_SymbolOptions.UseVisualStyleBackColor = true;
 			this.check_SymbolOptions.CheckedChanged += new System.EventHandler(this.check_SymbolOptions_CheckedChanged);
@@ -347,7 +348,7 @@
 			// lb_UseEFStartDay
 			// 
 			this.lb_UseEFStartDay.AutoSize = true;
-			this.lb_UseEFStartDay.Location = new System.Drawing.Point(11, 336);
+			this.lb_UseEFStartDay.Location = new System.Drawing.Point(12, 349);
 			this.lb_UseEFStartDay.Name = "lb_UseEFStartDay";
 			this.lb_UseEFStartDay.Size = new System.Drawing.Size(77, 12);
 			this.lb_UseEFStartDay.TabIndex = 0;
@@ -356,7 +357,7 @@
 			// lb_UseEFEndDay
 			// 
 			this.lb_UseEFEndDay.AutoSize = true;
-			this.lb_UseEFEndDay.Location = new System.Drawing.Point(249, 333);
+			this.lb_UseEFEndDay.Location = new System.Drawing.Point(250, 346);
 			this.lb_UseEFEndDay.Name = "lb_UseEFEndDay";
 			this.lb_UseEFEndDay.Size = new System.Drawing.Size(77, 12);
 			this.lb_UseEFEndDay.TabIndex = 0;
@@ -364,20 +365,21 @@
 			// 
 			// date_UseEFStartDay
 			// 
-			this.date_UseEFStartDay.Location = new System.Drawing.Point(82, 330);
+			this.date_UseEFStartDay.Location = new System.Drawing.Point(83, 343);
 			this.date_UseEFStartDay.Name = "date_UseEFStartDay";
 			this.date_UseEFStartDay.Size = new System.Drawing.Size(130, 21);
-			this.date_UseEFStartDay.TabIndex = 3;
+			this.date_UseEFStartDay.TabIndex = 16;
 			// 
 			// date_UseEFEndDay
 			// 
-			this.date_UseEFEndDay.Location = new System.Drawing.Point(320, 327);
+			this.date_UseEFEndDay.Location = new System.Drawing.Point(321, 340);
 			this.date_UseEFEndDay.Name = "date_UseEFEndDay";
 			this.date_UseEFEndDay.Size = new System.Drawing.Size(130, 21);
-			this.date_UseEFEndDay.TabIndex = 3;
+			this.date_UseEFEndDay.TabIndex = 17;
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.cmb_Cad);
 			this.groupBox1.Controls.Add(this.check_10);
 			this.groupBox1.Controls.Add(this.check_09);
 			this.groupBox1.Controls.Add(this.check_08);
@@ -388,21 +390,32 @@
 			this.groupBox1.Controls.Add(this.check_03);
 			this.groupBox1.Controls.Add(this.check_02);
 			this.groupBox1.Controls.Add(this.check_01);
-			this.groupBox1.Controls.Add(this.cmb_DINCAD);
+			this.groupBox1.Controls.Add(this.cmb_Level);
 			this.groupBox1.Controls.Add(this.label14);
 			this.groupBox1.Controls.Add(this.label11);
 			this.groupBox1.Controls.Add(this.txt_CADVersion);
 			this.groupBox1.Controls.Add(this.label13);
-			this.groupBox1.Controls.Add(this.txt_CADTarget);
 			this.groupBox1.Controls.Add(this.label12);
 			this.groupBox1.Controls.Add(this.date_CADOPUseEndDay);
-			this.groupBox1.Controls.Add(this.label15);
-			this.groupBox1.Location = new System.Drawing.Point(12, 373);
+			this.groupBox1.Controls.Add(this.lb_CADOPUseEndDay);
+			this.groupBox1.Location = new System.Drawing.Point(13, 386);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(470, 131);
-			this.groupBox1.TabIndex = 5;
+			this.groupBox1.TabIndex = 18;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "DINCAD";
+			// 
+			// cmb_Cad
+			// 
+			this.cmb_Cad.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+			this.cmb_Cad.FormattingEnabled = true;
+			this.cmb_Cad.Location = new System.Drawing.Point(210, 19);
+			this.cmb_Cad.Name = "cmb_Cad";
+			this.cmb_Cad.Size = new System.Drawing.Size(87, 22);
+			this.cmb_Cad.TabIndex = 14;
+			this.cmb_Cad.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cmb_Cad_DrawItem);
+			this.cmb_Cad.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_Cad_KeyDown);
+			this.cmb_Cad.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmb_Cad_KeyPress);
 			// 
 			// check_10
 			// 
@@ -410,7 +423,7 @@
 			this.check_10.Location = new System.Drawing.Point(385, 107);
 			this.check_10.Name = "check_10";
 			this.check_10.Size = new System.Drawing.Size(36, 16);
-			this.check_10.TabIndex = 4;
+			this.check_10.TabIndex = 13;
 			this.check_10.Text = "10";
 			this.check_10.UseVisualStyleBackColor = true;
 			// 
@@ -420,7 +433,7 @@
 			this.check_09.Location = new System.Drawing.Point(345, 107);
 			this.check_09.Name = "check_09";
 			this.check_09.Size = new System.Drawing.Size(36, 16);
-			this.check_09.TabIndex = 4;
+			this.check_09.TabIndex = 12;
 			this.check_09.Text = "09";
 			this.check_09.UseVisualStyleBackColor = true;
 			// 
@@ -430,7 +443,7 @@
 			this.check_08.Location = new System.Drawing.Point(303, 107);
 			this.check_08.Name = "check_08";
 			this.check_08.Size = new System.Drawing.Size(36, 16);
-			this.check_08.TabIndex = 4;
+			this.check_08.TabIndex = 11;
 			this.check_08.Text = "08";
 			this.check_08.UseVisualStyleBackColor = true;
 			// 
@@ -440,7 +453,7 @@
 			this.check_07.Location = new System.Drawing.Point(261, 107);
 			this.check_07.Name = "check_07";
 			this.check_07.Size = new System.Drawing.Size(36, 16);
-			this.check_07.TabIndex = 4;
+			this.check_07.TabIndex = 10;
 			this.check_07.Text = "07";
 			this.check_07.UseVisualStyleBackColor = true;
 			// 
@@ -450,7 +463,7 @@
 			this.check_06.Location = new System.Drawing.Point(219, 107);
 			this.check_06.Name = "check_06";
 			this.check_06.Size = new System.Drawing.Size(36, 16);
-			this.check_06.TabIndex = 4;
+			this.check_06.TabIndex = 9;
 			this.check_06.Text = "06";
 			this.check_06.UseVisualStyleBackColor = true;
 			// 
@@ -460,7 +473,7 @@
 			this.check_05.Location = new System.Drawing.Point(177, 107);
 			this.check_05.Name = "check_05";
 			this.check_05.Size = new System.Drawing.Size(36, 16);
-			this.check_05.TabIndex = 4;
+			this.check_05.TabIndex = 8;
 			this.check_05.Text = "05";
 			this.check_05.UseVisualStyleBackColor = true;
 			// 
@@ -470,7 +483,7 @@
 			this.check_04.Location = new System.Drawing.Point(139, 107);
 			this.check_04.Name = "check_04";
 			this.check_04.Size = new System.Drawing.Size(36, 16);
-			this.check_04.TabIndex = 4;
+			this.check_04.TabIndex = 7;
 			this.check_04.Text = "04";
 			this.check_04.UseVisualStyleBackColor = true;
 			// 
@@ -480,7 +493,7 @@
 			this.check_03.Location = new System.Drawing.Point(97, 107);
 			this.check_03.Name = "check_03";
 			this.check_03.Size = new System.Drawing.Size(36, 16);
-			this.check_03.TabIndex = 4;
+			this.check_03.TabIndex = 6;
 			this.check_03.Text = "03";
 			this.check_03.UseVisualStyleBackColor = true;
 			// 
@@ -490,7 +503,7 @@
 			this.check_02.Location = new System.Drawing.Point(55, 107);
 			this.check_02.Name = "check_02";
 			this.check_02.Size = new System.Drawing.Size(36, 16);
-			this.check_02.TabIndex = 4;
+			this.check_02.TabIndex = 5;
 			this.check_02.Text = "02";
 			this.check_02.UseVisualStyleBackColor = true;
 			// 
@@ -504,17 +517,17 @@
 			this.check_01.Text = "01";
 			this.check_01.UseVisualStyleBackColor = true;
 			// 
-			// cmb_DINCAD
+			// cmb_Level
 			// 
-			this.cmb_DINCAD.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-			this.cmb_DINCAD.FormattingEnabled = true;
-			this.cmb_DINCAD.Location = new System.Drawing.Point(51, 19);
-			this.cmb_DINCAD.Name = "cmb_DINCAD";
-			this.cmb_DINCAD.Size = new System.Drawing.Size(87, 22);
-			this.cmb_DINCAD.TabIndex = 1;
-			this.cmb_DINCAD.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cmb_DINCAD_DrawItem);
-			this.cmb_DINCAD.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_DINCAD_KeyDown);
-			this.cmb_DINCAD.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmb_DINCAD_KeyPress);
+			this.cmb_Level.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+			this.cmb_Level.FormattingEnabled = true;
+			this.cmb_Level.Location = new System.Drawing.Point(50, 19);
+			this.cmb_Level.Name = "cmb_Level";
+			this.cmb_Level.Size = new System.Drawing.Size(87, 22);
+			this.cmb_Level.TabIndex = 0;
+			this.cmb_Level.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cmb_Level_DrawItem);
+			this.cmb_Level.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmb_Level_KeyDown);
+			this.cmb_Level.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmb_Level_KeyPress);
 			// 
 			// label14
 			// 
@@ -536,7 +549,7 @@
 			// 
 			// txt_CADVersion
 			// 
-			this.txt_CADVersion.Location = new System.Drawing.Point(385, 19);
+			this.txt_CADVersion.Location = new System.Drawing.Point(397, 19);
 			this.txt_CADVersion.Name = "txt_CADVersion";
 			this.txt_CADVersion.Size = new System.Drawing.Size(67, 21);
 			this.txt_CADVersion.TabIndex = 2;
@@ -546,20 +559,11 @@
 			// label13
 			// 
 			this.label13.AutoSize = true;
-			this.label13.Location = new System.Drawing.Point(288, 23);
+			this.label13.Location = new System.Drawing.Point(303, 23);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(101, 12);
 			this.label13.TabIndex = 0;
 			this.label13.Text = "対象バージョン：";
-			// 
-			// txt_CADTarget
-			// 
-			this.txt_CADTarget.Location = new System.Drawing.Point(206, 20);
-			this.txt_CADTarget.Name = "txt_CADTarget";
-			this.txt_CADTarget.Size = new System.Drawing.Size(67, 21);
-			this.txt_CADTarget.TabIndex = 2;
-			this.txt_CADTarget.TextChanged += new System.EventHandler(this.txt_CADTarget_TextChanged);
-			this.txt_CADTarget.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txt_CADTarget_KeyPress);
 			// 
 			// label12
 			// 
@@ -577,39 +581,39 @@
 			this.date_CADOPUseEndDay.Size = new System.Drawing.Size(130, 21);
 			this.date_CADOPUseEndDay.TabIndex = 3;
 			// 
-			// label15
+			// lb_CADOPUseEndDay
 			// 
-			this.label15.AutoSize = true;
-			this.label15.Location = new System.Drawing.Point(11, 79);
-			this.label15.Name = "label15";
-			this.label15.Size = new System.Drawing.Size(77, 12);
-			this.label15.TabIndex = 0;
-			this.label15.Text = "利用終了日：";
+			this.lb_CADOPUseEndDay.AutoSize = true;
+			this.lb_CADOPUseEndDay.Location = new System.Drawing.Point(11, 79);
+			this.lb_CADOPUseEndDay.Name = "lb_CADOPUseEndDay";
+			this.lb_CADOPUseEndDay.Size = new System.Drawing.Size(77, 12);
+			this.lb_CADOPUseEndDay.TabIndex = 0;
+			this.lb_CADOPUseEndDay.Text = "利用終了日：";
 			// 
 			// check_TPM
 			// 
 			this.check_TPM.AutoSize = true;
-			this.check_TPM.Location = new System.Drawing.Point(15, 510);
+			this.check_TPM.Location = new System.Drawing.Point(16, 523);
 			this.check_TPM.Name = "check_TPM";
 			this.check_TPM.Size = new System.Drawing.Size(42, 16);
-			this.check_TPM.TabIndex = 4;
+			this.check_TPM.TabIndex = 19;
 			this.check_TPM.Text = "TPM";
 			this.check_TPM.UseVisualStyleBackColor = true;
 			// 
 			// check_DINsubcon
 			// 
 			this.check_DINsubcon.AutoSize = true;
-			this.check_DINsubcon.Location = new System.Drawing.Point(82, 510);
+			this.check_DINsubcon.Location = new System.Drawing.Point(83, 523);
 			this.check_DINsubcon.Name = "check_DINsubcon";
 			this.check_DINsubcon.Size = new System.Drawing.Size(72, 16);
-			this.check_DINsubcon.TabIndex = 4;
+			this.check_DINsubcon.TabIndex = 20;
 			this.check_DINsubcon.Text = "サブコン";
 			this.check_DINsubcon.UseVisualStyleBackColor = true;
 			// 
 			// label16
 			// 
 			this.label16.AutoSize = true;
-			this.label16.Location = new System.Drawing.Point(16, 542);
+			this.label16.Location = new System.Drawing.Point(17, 555);
 			this.label16.Name = "label16";
 			this.label16.Size = new System.Drawing.Size(41, 12);
 			this.label16.TabIndex = 0;
@@ -617,39 +621,39 @@
 			// 
 			// txt_Notes
 			// 
-			this.txt_Notes.Location = new System.Drawing.Point(55, 542);
+			this.txt_Notes.Location = new System.Drawing.Point(56, 555);
 			this.txt_Notes.MaxLength = 1200;
 			this.txt_Notes.Multiline = true;
 			this.txt_Notes.Name = "txt_Notes";
 			this.txt_Notes.Size = new System.Drawing.Size(427, 87);
-			this.txt_Notes.TabIndex = 6;
+			this.txt_Notes.TabIndex = 21;
 			// 
 			// btn_OK
 			// 
-			this.btn_OK.Location = new System.Drawing.Point(151, 645);
+			this.btn_OK.Location = new System.Drawing.Point(152, 658);
 			this.btn_OK.Name = "btn_OK";
 			this.btn_OK.Size = new System.Drawing.Size(98, 23);
-			this.btn_OK.TabIndex = 7;
+			this.btn_OK.TabIndex = 22;
 			this.btn_OK.Text = "実行";
 			this.btn_OK.UseVisualStyleBackColor = true;
 			this.btn_OK.Click += new System.EventHandler(this.btn_OK_Click);
 			// 
 			// btn_UpdateKeyRelease
 			// 
-			this.btn_UpdateKeyRelease.Location = new System.Drawing.Point(270, 645);
+			this.btn_UpdateKeyRelease.Location = new System.Drawing.Point(271, 658);
 			this.btn_UpdateKeyRelease.Name = "btn_UpdateKeyRelease";
 			this.btn_UpdateKeyRelease.Size = new System.Drawing.Size(98, 23);
-			this.btn_UpdateKeyRelease.TabIndex = 7;
+			this.btn_UpdateKeyRelease.TabIndex = 23;
 			this.btn_UpdateKeyRelease.Text = "更新キー発行";
 			this.btn_UpdateKeyRelease.UseVisualStyleBackColor = true;
 			this.btn_UpdateKeyRelease.Click += new System.EventHandler(this.btn_UpdateKeyRelease_Click);
 			// 
 			// btn_Close
 			// 
-			this.btn_Close.Location = new System.Drawing.Point(384, 645);
+			this.btn_Close.Location = new System.Drawing.Point(385, 658);
 			this.btn_Close.Name = "btn_Close";
 			this.btn_Close.Size = new System.Drawing.Size(98, 23);
-			this.btn_Close.TabIndex = 7;
+			this.btn_Close.TabIndex = 24;
 			this.btn_Close.Text = "閉じる";
 			this.btn_Close.UseVisualStyleBackColor = true;
 			this.btn_Close.Click += new System.EventHandler(this.btn_Close_Click);
@@ -663,13 +667,24 @@
 			this.panel1.Location = new System.Drawing.Point(77, 12);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(323, 28);
-			this.panel1.TabIndex = 9;
+			this.panel1.TabIndex = 0;
+			// 
+			// check_DINUseFlag
+			// 
+			this.check_DINUseFlag.AutoSize = true;
+			this.check_DINUseFlag.Location = new System.Drawing.Point(16, 191);
+			this.check_DINUseFlag.Name = "check_DINUseFlag";
+			this.check_DINUseFlag.Size = new System.Drawing.Size(102, 16);
+			this.check_DINUseFlag.TabIndex = 8;
+			this.check_DINUseFlag.Text = "DIN加工帳入力";
+			this.check_DINUseFlag.UseVisualStyleBackColor = true;
+			this.check_DINUseFlag.CheckedChanged += new System.EventHandler(this.check_DINUseFlag_CheckedChanged);
 			// 
 			// EUsb
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(494, 686);
+			this.ClientSize = new System.Drawing.Size(494, 695);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.btn_Close);
 			this.Controls.Add(this.btn_UpdateKeyRelease);
@@ -683,6 +698,7 @@
 			this.Controls.Add(this.check_SymbolOptions);
 			this.Controls.Add(this.check_QR);
 			this.Controls.Add(this.check_Weight);
+			this.Controls.Add(this.check_DINUseFlag);
 			this.Controls.Add(this.check_CADGetInfo);
 			this.Controls.Add(this.check_DINsubcon);
 			this.Controls.Add(this.check_TPM);
@@ -756,14 +772,13 @@
 		private System.Windows.Forms.DateTimePicker date_UseEFEndDay;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Label label11;
-		private System.Windows.Forms.ComboBox cmb_DINCAD;
-		private System.Windows.Forms.TextBox txt_CADTarget;
+		private System.Windows.Forms.ComboBox cmb_Level;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.TextBox txt_CADVersion;
 		private System.Windows.Forms.Label label13;
 		private System.Windows.Forms.Label label14;
 		private System.Windows.Forms.DateTimePicker date_CADOPUseEndDay;
-		private System.Windows.Forms.Label label15;
+		private System.Windows.Forms.Label lb_CADOPUseEndDay;
 		private System.Windows.Forms.CheckBox check_01;
 		private System.Windows.Forms.CheckBox check_02;
 		private System.Windows.Forms.CheckBox check_03;
@@ -782,5 +797,7 @@
 		private System.Windows.Forms.Button btn_UpdateKeyRelease;
 		private System.Windows.Forms.Button btn_Close;
 		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.ComboBox cmb_Cad;
+		private System.Windows.Forms.CheckBox check_DINUseFlag;
 	}
 }
